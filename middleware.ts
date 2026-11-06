@@ -12,15 +12,15 @@ export async function middleware(req: NextRequest) {
       cookies: {
         getAll: () => req.cookies.getAll(),
         setAll: (list: any[]) => {
-          list.forEach(({ name, value }) =>
-            req.cookies.set(name, value)
-          );
+          list.forEach(({ name, value }) => {
+            req.cookies.set(name, value);
+          });
 
           res = NextResponse.next({ request: req });
 
-          list.forEach(({ name, value, options }) =>
-            res.cookies.set(name, value, options)
-          );
+          list.forEach(({ name, value, options }) => {
+            res.cookies.set(name, value, options);
+          });
         },
       },
     }
@@ -32,19 +32,19 @@ export async function middleware(req: NextRequest) {
 
   const path = req.nextUrl.pathname;
 
-  // Public routes, including dashboard preview
+  // Public routes for the wedding app demo
   const open =
     path === "/" ||
     path.startsWith("/login") ||
     path.startsWith("/auth") ||
     path.startsWith("/dashboard");
 
-  // Protect all other routes
+  // Redirect unauthenticated visitors only from protected routes
   if (!user && !open) {
     return NextResponse.redirect(new URL("/login", req.url));
   }
 
-  // Signed-in users visiting login can go to dashboard
+  // Send authenticated users away from the login page
   if (user && path.startsWith("/login")) {
     return NextResponse.redirect(new URL("/dashboard", req.url));
   }
