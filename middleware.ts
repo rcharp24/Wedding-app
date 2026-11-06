@@ -19,7 +19,15 @@ export async function middleware(req: NextRequest) {
   );
   const { data: { user } } = await sb.auth.getUser();
   const path = req.nextUrl.pathname;
-  const open = path.startsWith("/login") || path.startsWith("/auth");
+  const open =
+  path === "/" ||
+  path.startsWith("/login") ||
+  path.startsWith("/auth") ||
+  path.startsWith("/dashboard");
+
+if (!user && !open) {
+  return NextResponse.redirect(new URL("/login", req.url));
+}
   const publicPreview =
   path === "/" ||
   path === "/dashboard" ||
