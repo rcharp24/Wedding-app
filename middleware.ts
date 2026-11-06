@@ -1,9 +1,13 @@
 
 import { createServerClient } from "@supabase/ssr";
-import { NextResponse, type NextRequest } from "next/server";
+import { NextResponse } from "next/server";
+import type { NextRequest } from "next/server";
 
-export async function middleware(req: NextRequest) {
-  let res = NextResponse.next({ request: req });
+export async function middleware(request: NextRequest) {
+  // TEMPORARY PREVIEW MODE
+  if (process.env.NEXT_PUBLIC_PREVIEW_MODE === "true") {
+    return NextResponse.next();
+  }
 
   const sb = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
