@@ -1,6 +1,0 @@
-@tailwind base; @tailwind components; @tailwind utilities;
-body { @apply bg-paper text-ink font-sans antialiased; }
-.field { @apply w-full rounded-md border border-line bg-white px-3 py-2.5 text-base outline-none focus:border-sage focus:ring-2 focus:ring-sage/20; }
-.btn { @apply inline-flex items-center justify-center rounded-md bg-sage px-4 py-2.5 font-medium text-white hover:bg-sage-dark disabled:opacity-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sage; }
-.btn-quiet { @apply inline-flex items-center justify-center rounded-md border border-line bg-white px-4 py-2.5 font-medium hover:bg-sage-soft; }
-@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
