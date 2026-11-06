@@ -21,8 +21,8 @@ export async function middleware(req: NextRequest) {
   const path = req.nextUrl.pathname;
   const open =
   path === "/" ||
-  path.startsWith("/login") ||
-  path.startsWith("/auth") ||
+  //path.startsWith("/login") ||
+  //path.startsWith("/auth") ||
   path.startsWith("/dashboard");
 
 if (!user && !open) {
