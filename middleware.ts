@@ -26,7 +26,7 @@ export async function middleware(req: NextRequest) {
   path.startsWith("/dashboard");
 
 if (!user && !open) {
-  return NextResponse.redirect(new URL("/login", req.url));
+  return NextResponse.redirect(new URL("/dashboard", req.url));
 }
   const publicPreview =
   path === "/" ||
@@ -34,8 +34,8 @@ if (!user && !open) {
   path.startsWith("/dashboard/");
 
 if (!user && !open && !publicPreview)
-  return NextResponse.redirect(new URL("/login", req.url));
-  if (user && path.startsWith("/login")) return NextResponse.redirect(new URL("/dashboard", req.url));
+  return NextResponse.redirect(new URL("/dashboard", req.url));
+  if (user && path.startsWith("/dashboard")) return NextResponse.redirect(new URL("/dashboard", req.url));
   return res;
 }
 
