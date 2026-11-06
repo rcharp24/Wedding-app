@@ -9,22 +9,30 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
+  let response = NextResponse.next({
+    request,
+  });
+
   const sb = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
     {
       cookies: {
-        getAll: () => req.cookies.getAll(),
-        setAll: (list: any[]) => {
-          list.forEach(({ name, value }) => {
-            req.cookies.set(name, value);
+        getAll() {
+          return request.cookies.getAll();
+        },
+        setAll(cookiesToSet) {
+          cookiesToSet.forEach(({ name, value }) =>
+            request.cookies.set(name, value)
+          );
+
+          response = NextResponse.next({
+            request,
           });
 
-          res = NextResponse.next({ request: req });
-
-          list.forEach(({ name, value, options }) => {
-            res.cookies.set(name, value, options);
-          });
+          cookiesToSet.forEach(({ name, value, options }) =>
+            response.cookies.set(name, value, options)
+          );
         },
       },
     }
@@ -34,26 +42,22 @@ export async function middleware(request: NextRequest) {
     data: { user },
   } = await sb.auth.getUser();
 
-  const path = req.nextUrl.pathname;
+  const path = request.nextUrl.pathname;
 
-  // Public routes for the wedding app demo
   const open =
     path === "/" ||
     path.startsWith("/login") ||
-    path.startsWith("/auth") ||
-    path.startsWith("/dashboard");
+    path.startsWith("/auth");
 
-  // Redirect unauthenticated visitors only from protected routes
   if (!user && !open) {
-    return NextResponse.redirect(new URL("/login", req.url));
+    return NextResponse.redirect(new URL("/login", request.url));
   }
 
-  // Send authenticated users away from the login page
   if (user && path.startsWith("/login")) {
-    return NextResponse.redirect(new URL("/dashboard", req.url));
+    return NextResponse.redirect(new URL("/dashboard", request.url));
   }
 
-  return res;
+  return response;
 }
 
 export const config = {
